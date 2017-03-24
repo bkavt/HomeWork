@@ -1,57 +1,120 @@
 package by.htp.homework4.domain;
 
-public abstract class Library {
+public class Library implements ArrayEdit {
 	
 
-	private String  title;
-	private String  author;
-	private int year;
-	private double price;
+	public String  title;
+	public String  author;
+	public int year;
+	public double price;
 	
 	public Library(){}
 	public Library(String title, String author, int year, double price) {
+		super();
 		this.price = price;
 		this.title = title;
 		this.year=year;
 		this.author=author;
 	}
 	
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
+	private  int index=0;
+	private  int size=1;
+	private Book[] myLibrary;
 	
-	public String getAuthor() {
-		return author;
-	}
-	public void setAuthor(String author) {
-		this.author = author;
-	}
 	
-	public int getYear() {
-		return year;
-	}
-	public void setYear(int year) {
-		this.year = year;
-	}
 	
-	public double getPrice() {
-		return price;
-	}
-	public void setPrice(double price) {
-		this.price = price;
-	}
-	
-	public void show (){
-		//System.out.println("Книга №"+j);
-		System.out.println("Название:"+this.title);
-		System.out.println("Автор: "+this.author);
-		System.out.println("Год издания:"+this.year);
-		System.out.println("Прайс:"+this.price);	
-		System.out.println("");	
+	public void addElement(Book book){
+		if (index==0){
+		myLibrary = new Book[size];
 		}
+		myLibrary[index]=book;
+		index++;
+		if (index>=size){
+			size++;
+			Book[] myArrayCopy = new Book[size];
+			for (int i=0; i<myLibrary.length; i++){
+				myArrayCopy[i]=myLibrary[i];
+				}
+			myLibrary=myArrayCopy;
+			}
+	}
+	
+			
+	public void sortUp(){
+		
+		for(int k=1; k<myLibrary.length-1;k++ ){
+			for (int l=k;l>0 && myLibrary[l].getYear()<myLibrary[l-1].getYear();l--){
+				myLibrary[myLibrary.length-1]=myLibrary[l];
+				myLibrary[l]=myLibrary[l-1];
+				myLibrary[l-1]=myLibrary[myLibrary.length-1];
+				
+			}
+			
+		}
+	}
+	
+	public void sortDown(){
+		for(int i=myLibrary.length-2; i>=0;i-- ){
+			for (int j=i;j<myLibrary.length-2 && myLibrary[j].getYear()<myLibrary[j+1].getYear();j++){
+				myLibrary[myLibrary.length-1]=myLibrary[j];
+				myLibrary[j]=myLibrary[j+1];
+				myLibrary[j+1]=myLibrary[myLibrary.length-1];
+				
+			}
+			
+		}
+	}
+	
+	public void showAll(){
+		System.out.println("Текущие значения массива:");
+		for (int i=0; i<myLibrary.length-1; i++){
+			myLibrary[i].show(i);
+			}
+		if (myLibrary.length==1){
+		System.out.println("Библиотека пуста");
+		}
+		
+	}
+	public void  find(String str){
+		int index=0;
+		for (int i=0; i<myLibrary.length-1; i++){
+			if (str.contains(myLibrary[i].getAuthor())){
+			myLibrary[i].show(i);
+			index++;
+			}
+		}
+		if (index==0){
+		System.out.println("Автор: "+str+" - не найден");
+		}
+	}
+	
+	public void del(String str){
+		int flag=0;
+		for (int i=0; i<myLibrary.length-2; i++){
+			 if (str.contains(myLibrary[i].getTitle())){
+				 for (int j=i; j<myLibrary.length-2; j++){
+					 myLibrary[j]=myLibrary[j+1]; 
+				 }
+				 flag++;
+			 }
+		}
+		if (flag>=1){
+		Book[] myArrayCopy = new Book[myLibrary.length-flag];
+				for (int i=0; i<myLibrary.length-flag; i++){
+					myArrayCopy[i]=myLibrary[i];
+					}
+				myLibrary=myArrayCopy;
+				index-=flag;
+				size-=flag;
+		System.out.println("Удалено "+flag+ " книг");		
+		}
+		else{
+			System.out.println("Книга с названием " + str+" - не найдена");
+			}
+		
+	}
+	
+	
 	
 	
 }
